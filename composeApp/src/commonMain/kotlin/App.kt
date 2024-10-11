@@ -1,9 +1,8 @@
-
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 
 @Composable
-fun App() {
+internal fun App() {
     MaterialTheme {
 
     }
