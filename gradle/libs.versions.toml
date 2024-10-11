@@ -1,0 +1,84 @@
+[versions]
+compose-plugin = "1.7.0-rc01"
+junit = "4.13.2"
+kotlin = "2.0.20"
+ksp = "2.0.20-1.0.25"
+
+# AndroidX
+androidx-lifecycle = "2.8.2"
+androidx-navigation = "2.8.0-alpha10"
+
+# KotlinX
+kotlinx-serialization = "1.7.0"
+kotlinx-datetime = "0.6.1"
+
+# UI
+kolor = "2.0.0"
+
+# Network
+ktor = "3.0.0"
+
+# Database
+multiplatformSettings = "1.1.1"
+
+# Dependency Injection
+koin = "4.0.0"
+
+# Debug & Test & Logs
+kermit = "2.0.4"
+
+
+[libraries]
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+# AndroidX
+androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+# KotlinX
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+# UI
+kolor-core = { module = "com.materialkolor:material-kolor", version.ref = "kolor" }
+
+# Network
+ktor-client-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor" }
+ktor-client-wasmjs = { module = "io.ktor:ktor-client-js-wasm-js", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktor" }
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+# Database
+multiplatform-settings-noArgs = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
+
+# Dependency Injection
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+
+# Debug & Test & Logs
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+
+[plugins]
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+[bundles]
+androidx = ["androidx-navigation-compose", "androidx-lifecycle-viewmodel", "androidx-lifecycle-runtime-compose"]
+kotlinx = ["kotlinx-datetime", "kotlinx-serialization"]
+ui = ["kolor-core"]
+network = ["ktor-client-core", "ktor-client-json", "ktor-client-auth", "ktor-client-logging", "ktor-client-serialization", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
+database = ["multiplatform-settings-noArgs"]
+di = ["koin-core", "koin-compose", "koin-compose-viewmodel"]
+debug = ["kermit"]
