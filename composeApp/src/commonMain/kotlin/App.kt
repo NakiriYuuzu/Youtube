@@ -1,9 +1,17 @@
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import core.presentation.theme.AppTheme
+import core.presentation.theme.ThemeSettings
+import feature.main.MainScreenRoot
+import org.koin.compose.KoinContext
 
 @Composable
 internal fun App() {
-    MaterialTheme {
+    KoinContext {
 
+        AppTheme(
+            settings = ThemeSettings()
+        ) {
+            MainScreenRoot()
+        }
     }
 }

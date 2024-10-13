@@ -59,6 +59,8 @@ kotlin {
             implementation(libs.bundles.database)
             implementation(libs.bundles.di)
             implementation(libs.bundles.debug)
+
+            implementation(libs.supabase.postgres)
         }
         jsMain.dependencies {
             implementation(libs.ktor.client.js)

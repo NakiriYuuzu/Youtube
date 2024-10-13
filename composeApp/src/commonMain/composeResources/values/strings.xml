@@ -1,0 +1,14 @@
+<resources>
+<!--  UI  -->
+    <string name="ui_go_back">Go Back</string>
+    <string name="ui_show_more">Show More</string>
+<!--  Theme  -->
+    <string name="theme_follow_system">System</string>
+    <string name="theme_dark_on">Dark</string>
+    <string name="theme_dark_off">Light</string>
+<!--  SettingScreen  -->
+    <string name="setting_title">Settings</string>
+    <string name="setting_style_title">Styles</string>
+    <string name="setting_style_theme_title">Dark Mode</string>
+    <string name="setting_style_theme_desc">Choose your preferred app theme</string>
+</resources>

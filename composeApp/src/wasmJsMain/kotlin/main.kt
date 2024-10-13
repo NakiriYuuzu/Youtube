@@ -1,13 +1,12 @@
-package net.yuuzu.youtube
-
-import App
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
+import core.di.initKoin
 import kotlinx.browser.document
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    ComposeViewport(document.body!!) {
+    val koin = initKoin {}.koin
+    return ComposeViewport(document.body!!) {
         App()
     }
 }
