@@ -33,14 +33,16 @@ data class ThemeSettings(
 )
 
 internal val LocalThemeIsDark: ProvidableCompositionLocal<State<Boolean>> = compositionLocalOf {
-    error("Not initialized")
+    error("Not initialized LocalThemeIsDark.")
 }
 
 internal val LocalDynamicThemeState = compositionLocalOf<DynamicMaterialThemeState> {
-    error("Not initialized")
+    error("Not initialized LocalDynamicThemeState.")
 }
 
-internal val LocalColors = compositionLocalOf<MaterialKolors> { error("Not initialized") }
+internal val LocalColors = compositionLocalOf<MaterialKolors> {
+    error("Not initialized LocalColors.")
+}
 
 @Composable
 fun createThemeState(

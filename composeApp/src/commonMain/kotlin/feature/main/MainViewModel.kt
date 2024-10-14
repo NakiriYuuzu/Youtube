@@ -24,8 +24,14 @@ class MainViewModel(
     private fun execute() {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
+
             val users = repository.getUsers()
-            _state.value = _state.value.copy(users = users, isLoading = false)
+            val themePreference = repository.getThemePreference()
+            _state.value = _state.value.copy(
+                users = users,
+                themePreference = themePreference,
+                isLoading = false
+            )
         }
     }
 }

@@ -5,7 +5,7 @@ import kotlinx.browser.document
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    val koin = initKoin {}.koin
+    initKoin()
     return ComposeViewport(document.body!!) {
         App()
     }
