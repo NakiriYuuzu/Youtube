@@ -2,7 +2,7 @@ package feature.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import core.domain.repository.YoutubeRepository
+import core.data.source.YoutubeSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val repository: YoutubeRepository
+    private val localSource: YoutubeSource.Local,
+    private val remoteSource: YoutubeSource.Remote
 ) : ViewModel() {
     private val _state = MutableStateFlow(MainState())
     val state = _state
@@ -25,13 +26,13 @@ class MainViewModel(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true)
 
-            val users = repository.getUsers()
-            val themePreference = repository.getThemePreference()
-            _state.value = _state.value.copy(
-                users = users,
-                themePreference = themePreference,
-                isLoading = false
-            )
+//            val users = local.getUsers()
+//            val themePreference = repository.getThemePreference()
+//            _state.value = _state.value.copy(
+//                users = users,
+//                themePreference = themePreference,
+//                isLoading = false
+//            )
         }
     }
 }

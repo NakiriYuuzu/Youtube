@@ -6,6 +6,9 @@
     <string name="theme_follow_system">System</string>
     <string name="theme_dark_on">Dark</string>
     <string name="theme_dark_off">Light</string>
+<!--  Error  -->
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_supabase_encoding">Encoding error, please check your input.</string>
 <!--  SettingScreen  -->
     <string name="setting_title">Settings</string>
     <string name="setting_style_title">Styles</string>

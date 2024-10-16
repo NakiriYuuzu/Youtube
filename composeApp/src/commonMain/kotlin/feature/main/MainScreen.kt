@@ -3,6 +3,7 @@ package feature.main
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,13 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.twotone.Money
 import androidx.compose.material.icons.twotone.QrCode2
 import androidx.compose.material.icons.twotone.WbSunny
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,18 +26,23 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import core.presentation.component.YuuzuSheetScaffold
-import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreenRoot() {
-    MainScreen()
+fun MainScreenRoot(
+
+) {
+    MainScreen(
+
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,11 +50,11 @@ fun MainScreenRoot() {
 private fun MainScreen(
 
 ) {
-    val scope = rememberCoroutineScope()
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
     val scaffoldState = rememberBottomSheetScaffoldState()
+
     YuuzuSheetScaffold(
         scaffoldState = scaffoldState,
-        sheetPeekHeight = 0.dp,
         sheetContent = {
             SheetContent()
         }
@@ -60,15 +64,6 @@ private fun MainScreen(
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            IconButton(
-                onClick = {},
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.TwoTone.WbSunny,
-                    contentDescription = null,
-                )
-            }
             Card(
                 colors = CardDefaults.cardColors().copy(
                     containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.33f)
@@ -84,9 +79,14 @@ private fun MainScreen(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text(
-                        text = "Yuuzu",
-                    )
+                    IconButton(
+                        onClick = {},
+                    ) {
+                        Icon(
+                            imageVector = Icons.TwoTone.WbSunny,
+                            contentDescription = null,
+                        )
+                    }
                     IconButton(
                         onClick = {}
                     ) {
@@ -109,11 +109,7 @@ private fun MainScreen(
                         modifier = Modifier.padding(16.dp)
                     )
                     DatabaseTablesScreen(
-                        onViewClicked = {
-                            scope.launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                        }
+                        onViewClicked = {}
                     )
                 }
             }
@@ -125,17 +121,31 @@ private fun MainScreen(
 private fun SheetContent(
 
 ) {
-
+    Text(
+        text = "Recent Transactions",
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.padding(16.dp)
+    )
+    LazyColumn(contentPadding = PaddingValues(vertical = 20.dp)) {
+        items(5) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                Column {
+                    Text(text = "a", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Spacer(Modifier.height(4.dp))
+                    Text(text = "a@a", style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
+            }
+        }
+    }
 }
 
 @Composable
 fun DatabaseTablesScreen(
+//    state: MainState,
     onViewClicked: (value: String) -> Unit
 ) {
     val schemaList = listOf("transactions", "users")
     val rowsList = listOf(11, 4)
-    val sizeList = listOf("32 kB", "32 kB")
-    val columnsList = listOf("6 columns", "5 columns")
 
     Column(
         modifier = Modifier
@@ -158,7 +168,6 @@ fun DatabaseTablesScreen(
                     placeholder = {
                         Text(
                             text = "Search for a table",
-                            fontSize = 14.sp
                         )
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -186,28 +195,23 @@ fun DatabaseTablesScreen(
         ) {
             Text(
                 text = "Name",
-                modifier = Modifier.weight(2f),
-                fontSize = 14.sp
+                modifier = Modifier.weight(1f),
             )
             Text(
                 text = "Note",
-                modifier = Modifier.weight(2f),
-                fontSize = 14.sp
+                modifier = Modifier.weight(3f),
             )
             Text(
                 text = "Amount",
                 modifier = Modifier.weight(1f),
-                fontSize = 14.sp
             )
             Text(
                 text = "Last Updated",
                 modifier = Modifier.weight(1f),
-                fontSize = 14.sp
             )
             Text(
                 text = "Actions",
                 modifier = Modifier.weight(1f),
-                fontSize = 14.sp
             )
         }
 
@@ -221,18 +225,15 @@ fun DatabaseTablesScreen(
             ) {
                 Text(
                     text = schema,
-                    modifier = Modifier.weight(2f),
-                    fontSize = 14.sp
+                    modifier = Modifier.weight(1f),
                 )
                 Text(
                     text = "Youtube Premium Subscription",
-                    modifier = Modifier.weight(2f),
-                    fontSize = 14.sp
+                    modifier = Modifier.weight(3f),
                 )
                 Text(
                     text = rowsList[index].toString(),
                     modifier = Modifier.weight(1f),
-                    fontSize = 14.sp
                 )
                 Text(
                     text = "2024/10/08",

@@ -1,12 +1,10 @@
 package core.di
 
 import com.russhwolf.settings.Settings
-import core.data.repository.YoutubeRepositoryImpl
 import core.data.source.YoutubeSource
 import core.data.source.local.YoutubeLocalSource
+import core.data.source.remote.Api
 import core.data.source.remote.YoutubeRemoteSource
-import core.data.source.remote.YoutubeService
-import core.domain.repository.YoutubeRepository
 import core.logging.KermitLogger
 import core.logging.Logger
 import core.util.getDispatcherProvider
@@ -32,17 +30,16 @@ private val localModule = module {
 }
 
 private val networkModule = module {
-    factoryOf(::YoutubeService)
+    single { Api.initSupabase() }
 }
 
 private val repositoryModule = module {
-    singleOf(::YoutubeRepositoryImpl).bind(YoutubeRepository::class)
     factoryOf(::YoutubeLocalSource).bind(YoutubeSource.Local::class)
     factoryOf(::YoutubeRemoteSource).bind(YoutubeSource.Remote::class)
 }
 
 private val viewModelModule = module {
-     viewModelOf(::MainViewModel)
+    viewModelOf(::MainViewModel)
 }
 
 private val appModules = listOf(
