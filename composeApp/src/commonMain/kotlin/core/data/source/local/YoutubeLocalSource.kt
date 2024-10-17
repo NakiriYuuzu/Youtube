@@ -14,7 +14,7 @@ class YoutubeLocalSource(
     override suspend fun getThemePreference(): ThemePreference =
         withContext(dispatcherProvider.io) {
             ThemePreference(
-                settings.getInt(DARK_MODE_KEY, ThemePreference.DarkMode.System.value)
+                settings.getInt(DARK_MODE_KEY, ThemePreference.DarkMode.Dark.value)
             )
         }
 

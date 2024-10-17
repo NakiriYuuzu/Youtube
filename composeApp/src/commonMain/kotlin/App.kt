@@ -2,7 +2,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import core.presentation.theme.AppTheme
 import core.presentation.theme.ThemeSettings
-import feature.main.MainScreenRoot
+import feature.main.MainScreen
 import feature.main.MainViewModel
 import org.koin.compose.KoinContext
 import org.koin.compose.viewmodel.koinViewModel
@@ -11,12 +11,17 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun App() {
     KoinContext {
         val viewModel = koinViewModel<MainViewModel>()
-        val state = viewModel.state.collectAsStateWithLifecycle()
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         AppTheme(
-            settings = ThemeSettings()
+            settings = ThemeSettings(
+                isDarkMode = state.themePreference.isDarkTheme()
+            )
         ) {
-            MainScreenRoot()
+            MainScreen(
+                state = state,
+                viewModel = viewModel
+            )
         }
     }
 }
