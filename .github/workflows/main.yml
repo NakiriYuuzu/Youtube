@@ -24,9 +24,7 @@ jobs:
 
       - name: Generate local.properties
         run: |
-          echo \n >> local.properties
-          echo SUPABASE_URL=${{ secrets.SUPABASE_URL }}\n >> local.properties
-          echo SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}\n >> local.properties
+          printf "SUPABASE_URL=%s\nSUPABASE_KEY=%s\n" "${{ secrets.SUPABASE_URL }}" "${{ secrets.SUPABASE_KEY }}" >> local.properties
 
       - name: Assemble
         run: ./gradlew assemble --stacktrace
