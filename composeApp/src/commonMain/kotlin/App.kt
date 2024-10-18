@@ -1,4 +1,3 @@
-import Youtube.composeApp.BuildConfig
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import core.presentation.theme.AppTheme

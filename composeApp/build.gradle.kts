@@ -1,7 +1,5 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
-import java.io.FileInputStream
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -16,8 +14,6 @@ buildConfig {
     useKotlinOutput { internalVisibility = true }
     val supabaseUrl: String? = System.getenv("SUPABASE_URL")
     val supabaseKey: String? = System.getenv("SUPABASE_KEY")
-    println("supabaseUrl: $supabaseUrl")
-    println("supabaseKey: $supabaseKey")
     buildConfigField("String", "SUPABASE_URL", supabaseUrl)
     buildConfigField("String", "SUPABASE_KEY", supabaseKey)
 }
