@@ -24,11 +24,11 @@ jobs:
 
       - name: Generate local.properties
         run: |
-          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> local.properties
-          echo "SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}" >> local.properties  
+          echo SUPABASE_URL=${{ secrets.SUPABASE_URL }} >> local.properties
+          echo SUPABASE_KEY=${{ secrets.SUPABASE_KEY }} >> local.properties
 
-      - name: Clean dependency
-        run: ./gradlew clean --daemon
+      - name: Assemble
+        run: ./gradlew assemble --stacktrace
 
       - name: Build WasmJs
         run: ./gradlew wasmJsBrowserDistribution --daemon
