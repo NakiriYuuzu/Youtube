@@ -14,12 +14,12 @@ plugins {
 
 buildConfig {
     useKotlinOutput { internalVisibility = true }
-    val prop = Properties().apply {
-        load(FileInputStream(File(rootProject.rootDir, "local.properties")))
-    }
-    println(prop)
-    buildConfigField("String", "SUPABASE_URL", prop.getProperty("SUPABASE_URL"))
-    buildConfigField("String", "SUPABASE_KEY", prop.getProperty("SUPABASE_KEY"))
+    val supabaseUrl: String? = System.getenv("SUPABASE_URL")
+    val supabaseKey: String? = System.getenv("SUPABASE_KEY")
+    println("supabaseUrl: $supabaseUrl")
+    println("supabaseKey: $supabaseKey")
+    buildConfigField("String", "SUPABASE_URL", supabaseUrl)
+    buildConfigField("String", "SUPABASE_KEY", supabaseKey)
 }
 
 kotlin {

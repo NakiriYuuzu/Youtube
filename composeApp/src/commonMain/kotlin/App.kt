@@ -11,8 +11,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun App() {
     KoinContext {
-        println(BuildConfig.SUPABASE_KEY)
-        println(BuildConfig.SUPABASE_URL)
         val viewModel = koinViewModel<MainViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
