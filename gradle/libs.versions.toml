@@ -27,6 +27,7 @@ koin = "4.0.0"
 
 # Debug & Test & Logs
 kermit = "2.0.4"
+gradle-config = "5.5.0"
 
 
 [libraries]
@@ -71,6 +72,7 @@ kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+gradleConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "gradle-config" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

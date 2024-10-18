@@ -33,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import core.domain.model.Users
@@ -117,7 +118,10 @@ fun MainScreen(
                     DatabaseTablesScreen(
                         state = state,
                         onViewClicked = { user ->
-                            viewModel.onAction(MainAction.OnUserClick(user))
+                            scope.launch {
+                                scaffoldState.bottomSheetState.expand()
+                                viewModel.onAction(MainAction.OnUserClick(user))
+                            }
                         }
                     )
                 }
@@ -189,6 +193,7 @@ fun DatabaseTablesScreen(
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 16.dp)
+                    .clip(MaterialTheme.shapes.medium)
             )
 
             Button(

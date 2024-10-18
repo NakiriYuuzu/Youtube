@@ -1,13 +1,26 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.gradleConfig)
     alias(libs.plugins.ksp)
+}
+
+buildConfig {
+    useKotlinOutput { internalVisibility = true }
+    val prop = Properties().apply {
+        load(FileInputStream(File(rootProject.rootDir, "local.properties")))
+    }
+    println(prop.getProperty("SUPABASE_URL")?:"")
+    println(prop.getProperty("SUPABASE_KEY")?:"")
+    buildConfigField("String", "SUPABASE_URL", prop.getProperty("SUPABASE_URL"))
+    buildConfigField("String", "SUPABASE_KEY", prop.getProperty("SUPABASE_KEY"))
 }
 
 kotlin {

@@ -1,5 +1,6 @@
 package core.data.source.remote
 
+import Youtube.composeApp.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.serializer.KotlinXSerializer
@@ -15,10 +16,10 @@ object Api {
         }
 
     internal fun initSupabase() = createSupabaseClient(
-        supabaseUrl = Constants.SUPABASE_URL,
-        supabaseKey = Constants.SUPABASE_KEY
+        supabaseUrl = BuildConfig.SUPABASE_URL,
+        supabaseKey = BuildConfig.SUPABASE_KEY
     ) {
-        defaultLogLevel = io.github.jan.supabase.logging.LogLevel.DEBUG
+        defaultLogLevel = io.github.jan.supabase.logging.LogLevel.INFO
         defaultSerializer = KotlinXSerializer(jsonConfiguration)
 
         install(Postgrest)

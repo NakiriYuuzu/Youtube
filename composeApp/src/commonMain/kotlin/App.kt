@@ -1,3 +1,4 @@
+import Youtube.composeApp.BuildConfig
 import androidx.compose.runtime.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import core.presentation.theme.AppTheme
@@ -10,6 +11,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun App() {
     KoinContext {
+        println(BuildConfig.SUPABASE_KEY)
+        println(BuildConfig.SUPABASE_URL)
         val viewModel = koinViewModel<MainViewModel>()
         val state by viewModel.state.collectAsStateWithLifecycle()
 
