@@ -17,6 +17,7 @@ buildConfig {
     val prop = Properties().apply {
         load(FileInputStream(File(rootProject.rootDir, "local.properties")))
     }
+    println(prop)
     buildConfigField("String", "SUPABASE_URL", prop.getProperty("SUPABASE_URL"))
     buildConfigField("String", "SUPABASE_KEY", prop.getProperty("SUPABASE_KEY"))
 }
