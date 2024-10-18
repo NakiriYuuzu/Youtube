@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy-ghpage:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
 
     steps:
@@ -29,7 +29,7 @@ jobs:
           echo SUPABASE_KEY=${{ secrets.SUPABASE_KEY }} >> local.properties
 
       - name: Assemble
-        run: ./gradlew assemble --stacktrace
+        run: ./gradlew assemble --daemon --stacktrace
 
       - name: Build WasmJs
         run: ./gradlew wasmJsBrowserDistribution --daemon
