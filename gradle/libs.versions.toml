@@ -12,6 +12,10 @@ androidx-navigation = "2.8.0-alpha10"
 kotlinx-serialization = "1.7.0"
 kotlinx-datetime = "0.6.1"
 
+# Material
+material-navigation = "1.7.0-beta02"
+material-windowSize = "1.7.1"
+
 # UI
 kolor = "2.0.0"
 
@@ -43,6 +47,10 @@ androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle
 # KotlinX
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+# Material
+material-navigation = { module = "org.jetbrains.compose.material:material-navigation", version.ref = "material-navigation" }
+material-window-size = { module = "org.jetbrains.compose.material3:material3-window-size-class", version.ref = "material-windowSize" }
 
 # UI
 kolor-core = { module = "com.materialkolor:material-kolor", version.ref = "kolor" }
@@ -81,6 +89,7 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 [bundles]
 androidx = ["androidx-navigation-compose", "androidx-lifecycle-viewmodel", "androidx-lifecycle-runtime-compose"]
 kotlinx = ["kotlinx-datetime", "kotlinx-serialization"]
+material = ["material-navigation", "material-window-size"]
 ui = ["kolor-core"]
 network = ["ktor-client-core", "ktor-client-json", "ktor-client-auth", "ktor-client-logging", "ktor-client-serialization", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
 database = ["multiplatform-settings-noArgs"]

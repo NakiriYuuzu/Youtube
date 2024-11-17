@@ -1,39 +1,20 @@
 package feature.main
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.QrCode2
 import androidx.compose.material.icons.twotone.WbSunny
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import core.domain.model.Users
@@ -43,7 +24,7 @@ import core.util.common.toDate
 import core.util.utility.ObserveAsEvents
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MainScreen(
     state: MainState,
@@ -51,11 +32,18 @@ fun MainScreen(
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
+    val windowSizeClass = calculateWindowSizeClass()
+
+    val contentPadding = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> 8.dp
+        WindowWidthSizeClass.Medium -> 16.dp
+        WindowWidthSizeClass.Expanded -> 24.dp
+        else -> 16.dp
+    }
 
     ObserveAsEvents(flow = viewModel.events) { event ->
         when(event) {
             is MainEvent.Error -> {
-
             }
         }
     }
@@ -63,107 +51,128 @@ fun MainScreen(
     YuuzuSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContent = {
-            SheetContent(users = state.selectedUser)
+            SheetContent(
+                users = state.selectedUser,
+                windowSizeClass = windowSizeClass.widthSizeClass
+            )
         }
-    ) {
-        Box(
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
-                .padding(16.dp)
                 .fillMaxSize()
+                .padding(paddingValues)
+                .padding(contentPadding)
         ) {
-            Card(
-                colors = CardDefaults.cardColors().copy(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.33f)
-                ),
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxSize(fraction = 0.75f)
+            // Top Bar
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                IconButton(
+                    onClick = { viewModel.onAction(MainAction.OnThemePreferenceChange) }
                 ) {
-                    IconButton(
-                        onClick = { viewModel.onAction(MainAction.OnThemePreferenceChange) },
-                    ) {
-                        Icon(
-                            imageVector = Icons.TwoTone.WbSunny,
-                            contentDescription = null,
-                        )
-                    }
-                    IconButton(
-                        onClick = { scope.launch { scaffoldState.bottomSheetState.expand() } }
-                    ) {
-                        Icon(
-                            imageVector = Icons.TwoTone.QrCode2,
-                            contentDescription = null,
-                        )
-                    }
-                }
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Youtube, Premium!",
-                        style = MaterialTheme.typography.displayLarge,
-                        modifier = Modifier.padding(16.dp)
+                    Icon(
+                        imageVector = Icons.TwoTone.WbSunny,
+                        contentDescription = null
                     )
-                    DatabaseTablesScreen(
-                        state = state,
-                        onViewClicked = { user ->
-                            scope.launch {
-                                scaffoldState.bottomSheetState.expand()
-                                viewModel.onAction(MainAction.OnUserClick(user))
-                            }
-                        }
+                }
+                IconButton(
+                    onClick = { scope.launch { scaffoldState.bottomSheetState.expand() } }
+                ) {
+                    Icon(
+                        imageVector = Icons.TwoTone.QrCode2,
+                        contentDescription = null
                     )
                 }
             }
+
+            // Title
+            Text(
+                text = "Youtube, Premium!",
+                style = when (windowSizeClass.widthSizeClass) {
+                    WindowWidthSizeClass.Compact -> MaterialTheme.typography.headlineLarge
+                    WindowWidthSizeClass.Medium -> MaterialTheme.typography.displayMedium
+                    else -> MaterialTheme.typography.displayLarge
+                },
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = contentPadding)
+            )
+
+            // Database Tables
+            DatabaseTablesScreen(
+                state = state,
+                windowSizeClass = windowSizeClass.widthSizeClass,
+                onViewClicked = { user ->
+                    scope.launch {
+                        scaffoldState.bottomSheetState.expand()
+                        viewModel.onAction(MainAction.OnUserClick(user))
+                    }
+                }
+            )
         }
     }
 }
 
 @Composable
 private fun SheetContent(
-    users: Users?
+    users: Users?,
+    windowSizeClass: WindowWidthSizeClass
 ) {
-    Text(
-        text = "Recent Transactions",
-        style = MaterialTheme.typography.titleLarge,
-        modifier = Modifier.padding(16.dp)
-    )
+    val contentPadding = when (windowSizeClass) {
+        WindowWidthSizeClass.Compact -> 8.dp
+        WindowWidthSizeClass.Medium -> 16.dp
+        else -> 24.dp
+    }
 
-    val transactions = users?.transactions ?: emptyList()
+    Column {
+        Text(
+            text = "Recent Transactions",
+            style = when (windowSizeClass) {
+                WindowWidthSizeClass.Compact -> MaterialTheme.typography.titleMedium
+                else -> MaterialTheme.typography.titleLarge
+            },
+            modifier = Modifier.padding(contentPadding)
+        )
 
-    LazyColumn(contentPadding = PaddingValues(vertical = 20.dp)) {
-        items(transactions) { transaction ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Column {
-                    Text(
-                        text = "${transaction.amount}",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = transaction.createdAt.toDate(),
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+        val transactions = users?.transactions ?: emptyList()
+        val lazyListState = rememberLazyListState()
+
+        LazyColumn(
+            state = lazyListState,
+            contentPadding = PaddingValues(vertical = contentPadding)
+        ) {
+            items(transactions) { transaction ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(contentPadding),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(contentPadding)
+                ) {
+                    Column {
+                        Text(
+                            text = "${transaction.amount}",
+                            style = when (windowSizeClass) {
+                                WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodyMedium
+                                else -> MaterialTheme.typography.bodyLarge
+                            },
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = transaction.createdAt.toDate(),
+                            style = when (windowSizeClass) {
+                                WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodySmall
+                                else -> MaterialTheme.typography.bodyMedium
+                            },
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
             }
         }
@@ -173,92 +182,128 @@ private fun SheetContent(
 @Composable
 fun DatabaseTablesScreen(
     state: MainState,
+    windowSizeClass: WindowWidthSizeClass,
     onViewClicked: (value: Users) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    val contentPadding = when (windowSizeClass) {
+        WindowWidthSizeClass.Compact -> 8.dp
+        WindowWidthSizeClass.Medium -> 16.dp
+        else -> 24.dp
+    }
+
+    Card(
+        colors = CardDefaults.cardColors().copy(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.33f)
+        ),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        // Search and Schema Section
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            var searchText by remember { mutableStateOf("") }
-            TextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                placeholder = { Text("Search for a table") },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 16.dp)
-                    .clip(MaterialTheme.shapes.medium)
-            )
-
-            Button(
-                onClick = { /* Perform search */ },
-                modifier = Modifier.padding(4.dp)
-            ) {
-                Text("Search")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Table Header
-        TableHeader()
-
-        // Table Content
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .padding(contentPadding)
         ) {
-            items(state.users) { user ->
-                TableRow(user, onViewClicked)
+            TableHeader(windowSizeClass = windowSizeClass)
+
+            val lazyListState = rememberLazyListState()
+
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(state.users) { user ->
+                    TableRow(
+                        user = user,
+                        windowSizeClass = windowSizeClass,
+                        onViewClicked = onViewClicked
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun TableHeader() {
+private fun TableHeader(windowSizeClass: WindowWidthSizeClass) {
+    val contentPadding = when (windowSizeClass) {
+        WindowWidthSizeClass.Compact -> 8.dp
+        WindowWidthSizeClass.Medium -> 16.dp
+        else -> 24.dp
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp),
+            .padding(vertical = contentPadding/2, horizontal = contentPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        listOf("Name", "Note", "Amount", "Last Updated", "Actions").forEachIndexed { index, title ->
+        listOf("Name", "Amount", "Last Updated", "Actions").forEachIndexed { index, title ->
             Text(
                 text = title,
-                modifier = Modifier.weight(if (index == 1 || index == 3) 2f else 1f),
+                style = when (windowSizeClass) {
+                    WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodyMedium
+                    else -> MaterialTheme.typography.bodyLarge
+                },
+                modifier = Modifier.weight(if (index == 2) 2f else 1f),
             )
         }
     }
 }
 
 @Composable
-private fun TableRow(user: Users, onViewClicked: (value: Users) -> Unit) {
+private fun TableRow(
+    user: Users,
+    windowSizeClass: WindowWidthSizeClass,
+    onViewClicked: (value: Users) -> Unit
+) {
+    val contentPadding = when (windowSizeClass) {
+        WindowWidthSizeClass.Compact -> 8.dp
+        WindowWidthSizeClass.Medium -> 16.dp
+        else -> 24.dp
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp),
+            .padding(vertical = contentPadding/2, horizontal = contentPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val note = user.transactions.firstOrNull()?.note ?: "No transactions noted"
         val lastUpdated = user.transactions.firstOrNull()?.createdAt ?: "N/A"
 
-        Text(text = user.name, modifier = Modifier.weight(1f))
-        Text(text = note, modifier = Modifier.weight(2f))
-        Text(text = "$${user.transactions.fastSumByFloat { it.amount }}", modifier = Modifier.weight(1f))
-        Text(text = lastUpdated.toDate(), modifier = Modifier.weight(2f))
+        Text(
+            text = user.name,
+            style = when (windowSizeClass) {
+                WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodyMedium
+                else -> MaterialTheme.typography.bodyLarge
+            },
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = "$${user.transactions.fastSumByFloat { it.amount }}",
+            style = when (windowSizeClass) {
+                WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodyMedium
+                else -> MaterialTheme.typography.bodyLarge
+            },
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = lastUpdated.toDate(),
+            style = when (windowSizeClass) {
+                WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodyMedium
+                else -> MaterialTheme.typography.bodyLarge
+            },
+            modifier = Modifier.weight(2f)
+        )
         Button(
             onClick = { onViewClicked(user) },
             modifier = Modifier.weight(1f)
         ) {
-            Text("View")
+            Text(
+                text = "View",
+                style = when (windowSizeClass) {
+                    WindowWidthSizeClass.Compact -> MaterialTheme.typography.labelMedium
+                    else -> MaterialTheme.typography.labelLarge
+                }
+            )
         }
     }
 }

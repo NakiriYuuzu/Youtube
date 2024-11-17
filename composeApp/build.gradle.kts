@@ -62,6 +62,7 @@ kotlin {
 
             implementation(libs.bundles.androidx)
             implementation(libs.bundles.kotlinx)
+            implementation(libs.bundles.material)
             implementation(libs.bundles.ui)
             implementation(libs.bundles.network)
             implementation(libs.bundles.database)
