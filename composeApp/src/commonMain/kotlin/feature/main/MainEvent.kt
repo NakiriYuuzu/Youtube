@@ -1,6 +1,5 @@
 package feature.main
 
-import core.domain.model.Users
 import core.util.utility.SupabaseError
 
 sealed interface MainEvent {

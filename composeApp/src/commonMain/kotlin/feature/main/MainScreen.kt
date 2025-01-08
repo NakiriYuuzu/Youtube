@@ -1,5 +1,6 @@
 package feature.main
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,25 +15,35 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import core.domain.model.Users
+import core.presentation.component.YuuzuDialog
 import core.presentation.component.YuuzuSheetScaffold
 import core.util.common.fastSumByFloat
 import core.util.common.toDate
 import core.util.utility.ObserveAsEvents
+import core.util.utility.toStringResource
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.painterResource
+import youtube.composeapp.generated.resources.Res
+import youtube.composeapp.generated.resources.qr_code
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MainScreen(
     state: MainState,
-    viewModel: MainViewModel,
+    viewModel: MainViewModel
 ) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val windowSizeClass = calculateWindowSizeClass()
+
+    val showModal = remember { mutableStateOf(false) }
 
     val contentPadding = when (windowSizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> 8.dp
@@ -44,9 +55,36 @@ fun MainScreen(
     ObserveAsEvents(flow = viewModel.events) { event ->
         when(event) {
             is MainEvent.Error -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = getString(event.error.toStringResource()),
+                        duration = SnackbarDuration.Short,
+                        actionLabel = "Dismiss"
+                    )
+                }
             }
         }
     }
+
+    YuuzuDialog(
+        openDialog = showModal,
+        content = {
+            Text(
+                text = "Payment QR Code",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(contentPadding)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Image(
+                painter = painterResource(Res.drawable.qr_code),
+                contentDescription = "QR Code",
+                modifier = Modifier
+                    .padding(contentPadding)
+                    .clip(MaterialTheme.shapes.large)
+            )
+        },
+        onConfirm = { showModal.value = false }
+    )
 
     YuuzuSheetScaffold(
         scaffoldState = scaffoldState,
@@ -55,7 +93,8 @@ fun MainScreen(
                 users = state.selectedUser,
                 windowSizeClass = windowSizeClass.widthSizeClass
             )
-        }
+        },
+        snackbarHost = {}
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -78,7 +117,7 @@ fun MainScreen(
                     )
                 }
                 IconButton(
-                    onClick = { scope.launch { scaffoldState.bottomSheetState.expand() } }
+                    onClick = { showModal.value = true }
                 ) {
                     Icon(
                         imageVector = Icons.TwoTone.QrCode2,

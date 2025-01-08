@@ -4,6 +4,7 @@ import androidx.compose.ui.util.fastFilter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import core.data.source.YoutubeSource
+import core.logging.Logger
 import core.presentation.util.ThemePreference
 import core.util.utility.onError
 import core.util.utility.onSuccess
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
+    private val logger: Logger,
     private val localSource: YoutubeSource.Local,
     private val remoteSource: YoutubeSource.Remote
 ) : ViewModel() {
