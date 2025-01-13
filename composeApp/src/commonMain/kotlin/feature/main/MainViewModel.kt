@@ -75,7 +75,7 @@ class MainViewModel(
             remoteSource.getUsers()
                 .onSuccess { users ->
                     _state.update { it.copy(
-                        users = users.fastFilter { user -> user.role == 1 },
+                        users = users.fastFilter { user -> user.role != 0 },
                         isLoading = false
                     ) }
                 }
