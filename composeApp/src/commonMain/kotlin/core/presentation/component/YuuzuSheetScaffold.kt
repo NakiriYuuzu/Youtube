@@ -13,12 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YuuzuSheetScaffold(
     scaffoldState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
-    sheetPeekHeight: Dp = BottomSheetDefaults.SheetPeekHeight,
+    sheetPeekHeight: Dp = 0.dp,
     sheetMaxWidth: Dp = BottomSheetDefaults.SheetMaxWidth,
     sheetShape: Shape = BottomSheetDefaults.ExpandedShape,
     sheetSwipeEnabled: Boolean = true,

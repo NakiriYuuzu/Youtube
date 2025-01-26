@@ -39,9 +39,8 @@ fun MainScreen(
     viewModel: MainViewModel
 ) {
     val scope = rememberCoroutineScope()
-    val scaffoldState = rememberBottomSheetScaffoldState()
-    val snackbarHostState = remember { SnackbarHostState() }
     val windowSizeClass = calculateWindowSizeClass()
+    val scaffoldState = rememberBottomSheetScaffoldState()
 
     val showModal = remember { mutableStateOf(false) }
 
@@ -56,7 +55,7 @@ fun MainScreen(
         when(event) {
             is MainEvent.Error -> {
                 scope.launch {
-                    snackbarHostState.showSnackbar(
+                    scaffoldState.snackbarHostState.showSnackbar(
                         message = getString(event.error.toStringResource()),
                         duration = SnackbarDuration.Short,
                         actionLabel = "Dismiss"
@@ -169,14 +168,45 @@ private fun SheetContent(
     Column(
         modifier = Modifier.fillMaxHeight(0.9f)
     ) {
-        Text(
-            text = "Recent Transactions",
-            style = when (windowSizeClass) {
-                WindowWidthSizeClass.Compact -> MaterialTheme.typography.titleMedium
-                else -> MaterialTheme.typography.titleLarge
-            },
-            modifier = Modifier.padding(contentPadding)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(contentPadding),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // 左側：使用者名稱和交易記錄
+            Column {
+                Text(
+                    text = users?.name ?: "",
+                    style = when (windowSizeClass) {
+                        WindowWidthSizeClass.Compact -> MaterialTheme.typography.titleMedium
+                        else -> MaterialTheme.typography.titleLarge
+                    }
+                )
+                Text(
+                    text = "Transactions",
+                    style = when (windowSizeClass) {
+                        WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodySmall
+                        else -> MaterialTheme.typography.bodyMedium
+                    },
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            
+            // 右側：總金額
+            val totalAmount = users?.transactions?.fastSumByFloat { it.amount } ?: 0f
+            Text(
+                text = "$${totalAmount}",
+                style = when (windowSizeClass) {
+                    WindowWidthSizeClass.Compact -> MaterialTheme.typography.titleMedium
+                    else -> MaterialTheme.typography.titleLarge
+                },
+                color = if (totalAmount >= 0) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.error
+                }
+            )
+        }
 
         val transactions = users?.transactions ?: emptyList()
         val lazyListState = rememberLazyListState()
