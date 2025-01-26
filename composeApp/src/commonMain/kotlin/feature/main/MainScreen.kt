@@ -166,7 +166,9 @@ private fun SheetContent(
         else -> 24.dp
     }
 
-    Column {
+    Column(
+        modifier = Modifier.fillMaxHeight(0.9f)
+    ) {
         Text(
             text = "Recent Transactions",
             style = when (windowSizeClass) {
@@ -181,37 +183,71 @@ private fun SheetContent(
 
         LazyColumn(
             state = lazyListState,
-            contentPadding = PaddingValues(vertical = contentPadding)
+            contentPadding = PaddingValues(vertical = contentPadding),
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
         ) {
             items(transactions) { transaction ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(contentPadding),
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(contentPadding)
                 ) {
-                    Column {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        // 左側：筆記和日期
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = transaction.note,
+                                style = when (windowSizeClass) {
+                                    WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodyMedium
+                                    else -> MaterialTheme.typography.bodyLarge
+                                },
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = transaction.createdAt.toDate(),
+                                style = when (windowSizeClass) {
+                                    WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodySmall
+                                    else -> MaterialTheme.typography.bodyMedium
+                                },
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(contentPadding))
+
+                        // 右側：金額
                         Text(
-                            text = "${transaction.amount}",
+                            text = "$${transaction.amount}",
                             style = when (windowSizeClass) {
-                                WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodyMedium
-                                else -> MaterialTheme.typography.bodyLarge
+                                WindowWidthSizeClass.Compact -> MaterialTheme.typography.titleMedium
+                                else -> MaterialTheme.typography.titleLarge
                             },
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = transaction.createdAt.toDate(),
-                            style = when (windowSizeClass) {
-                                WindowWidthSizeClass.Compact -> MaterialTheme.typography.bodySmall
-                                else -> MaterialTheme.typography.bodyMedium
-                            },
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            color = if (transaction.amount >= 0) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.error
+                            }
                         )
                     }
+                }
+
+                if (transaction != transactions.last()) {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = contentPadding),
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                    )
                 }
             }
         }
