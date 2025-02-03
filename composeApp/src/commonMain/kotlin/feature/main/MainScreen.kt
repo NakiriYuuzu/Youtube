@@ -145,8 +145,8 @@ fun MainScreen(
                 windowSizeClass = windowSizeClass.widthSizeClass,
                 onViewClicked = { user ->
                     scope.launch {
-                        scaffoldState.bottomSheetState.expand()
                         viewModel.onAction(MainAction.OnUserClick(user))
+                        scaffoldState.bottomSheetState.expand()
                     }
                 }
             )
