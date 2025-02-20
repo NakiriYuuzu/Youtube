@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.QrCode2
+import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material.icons.twotone.WbSunny
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -402,13 +403,7 @@ private fun TableRow(
             onClick = { onViewClicked(user) },
             modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = "View",
-                style = when (windowSizeClass) {
-                    WindowWidthSizeClass.Compact -> MaterialTheme.typography.labelMedium
-                    else -> MaterialTheme.typography.labelLarge
-                }
-            )
+            Icon(imageVector = Icons.TwoTone.Search, contentDescription = null)
         }
     }
 }
