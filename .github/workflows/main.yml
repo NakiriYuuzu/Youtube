@@ -33,9 +33,6 @@ jobs:
       - name: Build WasmJs
         run: ./gradlew wasmJsBrowserDistribution --daemon --stacktrace
 
-      - name: Build Js
-        run: ./gradlew jsBrowserDistribution --daemon --stacktrace
-
       - name: Setup Git Config
         run: |
           git config --global user.name 'github-actions'
@@ -45,10 +42,7 @@ jobs:
         if: success()
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          mkdir -p out/js out/wasmJs
-          cp -r kotlin-js-template/* out/
-          cp -r composeApp/build/dist/js/productionExecutable/* out/js/
-          cp -r composeApp/build/dist/wasmJs/productionExecutable/* out/wasmJs/
+          cp -r composeApp/build/dist/wasmJs/productionExecutable/* out/
           cd out
           git init
           git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
