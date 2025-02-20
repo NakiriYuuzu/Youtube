@@ -42,6 +42,7 @@ jobs:
         if: success()
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          mkdir -p out
           cp -r composeApp/build/dist/wasmJs/productionExecutable/* out/
           cd out
           git init
